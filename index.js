@@ -1,7 +1,7 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var path = require('path');
-
+var vfs = require('vfs');
 
 module.exports = function (opts) {
 
@@ -11,6 +11,7 @@ module.exports = function (opts) {
 
 
     var ctx = {
+        vfs: vfs,
         path: {
             make: function (key, type) {
                 return path.resolve(opts.paths[key][type]);
