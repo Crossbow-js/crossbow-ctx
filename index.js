@@ -7,8 +7,7 @@ module.exports = function (opts) {
 
     opts = opts || {};
     opts.pkg = opts.pkg || require(path.resolve(process.cwd(), "./package.json"));
-    opts.paths = opts.paths || opts.pkg.paths;
-
+    opts.paths = opts.paths || opts.pkg.crossbow.paths;
 
     var ctx = {
         vfs: vfs,
