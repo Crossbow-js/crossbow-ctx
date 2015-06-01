@@ -1,7 +1,7 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var path = require('path');
-var vfs = require('vfs');
+var vfs = require('vinyl-fs');
 
 module.exports = function (opts) {
 
