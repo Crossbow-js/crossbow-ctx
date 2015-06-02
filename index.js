@@ -23,6 +23,7 @@ module.exports = function (opts) {
 
 
     var ctx = {
+
         options: optObj,
         relPath: function (optPath) {
             return path.resolve(optObj.get(optPath));
@@ -42,7 +43,8 @@ module.exports = function (opts) {
         },
         config: opts.config,
         paths: opts.config,
-        root: process.cwd()
+        root: process.cwd(),
+        crossbow: opts.pkg.crossbow
     };
 
     return ctx;
