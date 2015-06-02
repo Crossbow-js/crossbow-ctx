@@ -1,19 +1,36 @@
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var path = require('path');
+var objPath = require('object-path');
 var vfs = require('vinyl-fs');
 
 module.exports = function (opts) {
 
     opts = opts || {};
     opts.pkg = opts.pkg || require(path.resolve(process.cwd(), "./package.json"));
-    opts.paths = opts.paths || opts.pkg.crossbow.paths;
+    opts.config = opts.config || opts.pkg.crossbow.config;
+
+    var options = Object.keys(opts.config).reduce(function (obj, key) {
+        if (!obj[key]) {
+            obj[key] = opts.config[key].options;
+        }
+
+        return obj;
+    }, {});
+
+
+    var optObj = objPath(options);
+
 
     var ctx = {
+        options: optObj,
+        relPath: function (optPath) {
+            return path.resolve(optObj.get(optPath));
+        },
         vfs: vfs,
         path: {
             make: function (key, type) {
-                return path.resolve(opts.paths[key][type]);
+                return path.resolve(opts.config[key][type]);
             }
         },
         file: {
@@ -23,7 +40,8 @@ module.exports = function (opts) {
                 fs.writeFileSync(outpath, output);
             }
         },
-        paths: opts.paths,
+        config: opts.config,
+        paths: opts.config,
         root: process.cwd()
     };
 
