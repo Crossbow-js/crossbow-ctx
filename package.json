@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "mkdirp": "^0.5.1",
+    "object-path": "^0.9.2",
     "vinyl-fs": "^1.0.0"
   }
 }
