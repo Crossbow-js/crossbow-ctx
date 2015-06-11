@@ -8,7 +8,7 @@ module.exports = function (opts) {
 
     opts = opts || {};
     opts.pkg = opts.pkg || require(path.resolve(process.cwd(), "./package.json"));
-    opts.config = opts.config || opts.pkg.crossbow.config;
+    opts.config = opts.config || opts.pkg.crossbow.config || {};
 
     var options = Object.keys(opts.config).reduce(function (obj, key) {
         if (!obj[key]) {
@@ -44,7 +44,8 @@ module.exports = function (opts) {
         config: opts.config,
         paths: opts.config,
         root: process.cwd(),
-        crossbow: opts.pkg.crossbow
+        crossbow: opts.pkg.crossbow,
+        mkdirp: mkdirp
     };
 
     return ctx;
