@@ -37,7 +37,7 @@ module.exports = function (opts) {
                 var args   = Array.prototype.slice.call(arguments);
                 var lookup = args[0];
 
-                if (!lookup.match(/\./) && !Array.isArray(lookup)) {
+                if (!Array.isArray(lookup) && !lookup.match(/\./)) {
                     lookup = args;
                 }
 
