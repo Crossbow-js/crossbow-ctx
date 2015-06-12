@@ -1,44 +1,67 @@
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var path = require('path');
+var fs      = require('fs');
+var write   = require('fs').writeFileSync;
+var read    = require('fs').readFileSync;
+var mkdirp  = require('mkdirp').sync;
+var path    = require('path');
+var resolve = require('path').resolve;
+var dirname = require('path').dirname;
 var objPath = require('object-path');
-var vfs = require('vinyl-fs');
+var vfs     = require('vinyl-fs');
 
 module.exports = function (opts) {
 
     opts = opts || {};
-    opts.pkg = opts.pkg || require(path.resolve(process.cwd(), "./package.json"));
+    opts.pkg = opts.pkg || require(resolve(process.cwd(), "./package.json"));
+    opts.pkg.crossbow = opts.pkg.crossbow || {};
     opts.config = opts.config || opts.pkg.crossbow.config || {};
 
     var options = Object.keys(opts.config).reduce(function (obj, key) {
         if (!obj[key]) {
             obj[key] = opts.config[key].options;
         }
-
         return obj;
     }, {});
 
-
     var optObj = objPath(options);
 
-
     var ctx = {
-
         options: optObj,
-        relPath: function (optPath) {
-            return path.resolve(optObj.get(optPath));
-        },
         vfs: vfs,
         path: {
-            make: function (key, type) {
-                return path.resolve(opts.config[key][type]);
+            /**
+             * Look up paths such as sass.root
+             * @returns {*}
+             */
+            make: function () {
+
+                var args   = Array.prototype.slice.call(arguments);
+                var lookup = args[0];
+
+                if (!lookup.match(/\./) && !Array.isArray(lookup)) {
+                    lookup = args;
+                }
+
+                return resolve(objPath.get(opts.config, lookup));
             }
         },
         file: {
-            write: function (key, type, output) {
-                var outpath = ctx.path.make(key, type);
-                mkdirp.sync(path.dirname(outpath));
-                fs.writeFileSync(outpath, output);
+            /**
+             * Write a file using path lookup
+             * @param filepath
+             * @param content
+             */
+            write: function (filepath, content) {
+                var outpath = ctx.path.make(filepath);
+                mkdirp(dirname(outpath));
+                write(outpath, content);
+            },
+            /**
+             * Write a file using path lookup
+             * @param filepath
+             */
+            read: function (filepath) {
+                var inpath = ctx.path.make(filepath);
+                return read(inpath, 'utf-8');
             }
         },
         config: opts.config,
