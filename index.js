@@ -1,7 +1,7 @@
 var fs      = require('fs');
 var write   = require('fs').writeFileSync;
 var read    = require('fs').readFileSync;
-var mkdirp  = require('mkdirp').sync;
+var mkdirp  = require('mkdirp');
 var path    = require('path');
 var resolve = require('path').resolve;
 var dirname = require('path').dirname;
@@ -52,7 +52,7 @@ module.exports = function (opts) {
              */
             write: function (filepath, content) {
                 var outpath = ctx.path.make(filepath);
-                mkdirp(dirname(outpath));
+                mkdirp.sync(dirname(outpath));
                 write(outpath, content);
             },
             /**

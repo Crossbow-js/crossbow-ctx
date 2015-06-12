@@ -22,3 +22,4 @@ var _ctx = ctx({
 
 assert(_ctx.path.make('sass.root.sass.input').indexOf('test/awyeah') > -1);
 assert(_ctx.file.read('html.index').indexOf('<html') > -1);
+assert(typeof _ctx.mkdirp.sync === 'function');
