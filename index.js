@@ -23,6 +23,7 @@ module.exports = function (opts) {
     }, {});
 
     var optObj = objPath(options);
+    var conf = objPath(opts.config);
 
     var ctx = {
         options: optObj,
@@ -64,7 +65,20 @@ module.exports = function (opts) {
                 return read(inpath, 'utf-8');
             }
         },
-        config: opts.config,
+        /**
+         * @param {Array} paths
+         */
+        makePaths: function (loc) {
+            var values = conf.get(loc);
+            if (values) {
+                return values.map(function (path) {
+                    return resolve(path);
+                });
+            }
+            throw new Error("Could not find " + loc + " in your configuration");
+        },
+        config: conf,
+        _config: opts.config,
         paths: opts.config,
         root: process.cwd(),
         crossbow: opts.pkg.crossbow,
