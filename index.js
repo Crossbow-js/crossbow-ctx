@@ -68,7 +68,8 @@ module.exports = function (opts) {
         paths: opts.config,
         root: process.cwd(),
         crossbow: opts.pkg.crossbow,
-        mkdirp: mkdirp
+        mkdirp: mkdirp,
+        trigger: {}
     };
 
     return ctx;
