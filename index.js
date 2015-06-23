@@ -22,9 +22,23 @@ module.exports = function (opts) {
         return obj;
     }, {});
 
+    function getLookup (args) {
+
+        var lookup = args[0];
+
+        if (!lookup.match(/\./) && !Array.isArray(lookup)) {
+            lookup = args;
+        }
+
+        return lookup;
+    }
+
     var optObj = objPath(options);
 
     var ctx = {
+        get: function () {
+            return objPath.get(opts.pkg.crossbow, getLookup.apply(null, arguments));
+        },
         options: optObj,
         vfs: vfs,
         path: {
@@ -33,15 +47,7 @@ module.exports = function (opts) {
              * @returns {*}
              */
             make: function () {
-
-                var args   = Array.prototype.slice.call(arguments);
-                var lookup = args[0];
-
-                if (!lookup.match(/\./) && !Array.isArray(lookup)) {
-                    lookup = args;
-                }
-
-                return resolve(objPath.get(opts.config, lookup));
+                return resolve(opts.cwd, objPath.get(opts.config, getLookup.apply(null, arguments)));
             }
         },
         file: {
